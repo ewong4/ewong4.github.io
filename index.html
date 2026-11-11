@@ -1,17 +1,1034 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Demo Website</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon">
-  </head>
-  <body>
-    <main>
-        <h1>Welcome to My Website</h1>  
-    </main>
-    <script src="index.js"></script>
-  </body>
-</html>
+
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Immunorad — Living Meta-Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&amp;family=DM+Mono:wght@400;500&amp;family=Instrument+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#0f2240; --navy-mid:#1a3560; --navy-light:#e8edf5;
+  --teal:#1d9e75; --teal-light:#e1f5ee; --teal-dark:#0f6e56;
+  --amber:#ba7517; --amber-light:#faeeda;
+  --red:#a32d2d; --red-light:#fcebeb;
+  --surface:#f7f6f3; --white:#ffffff;
+  --border:rgba(15,34,64,0.11); --border-mid:rgba(15,34,64,0.20);
+  --text:#0f2240; --text-muted:#4a5568; --text-faint:#8a9bb0;
+  --mono:'DM Mono',monospace; --serif:'Lora',serif; --sans:'Instrument Sans',sans-serif;
+}
+body { font-family:var(--sans); background:var(--surface); color:var(--text); font-size:15px; line-height:1.65; min-height:100vh; }
+
+/* NAV */
+nav { background:var(--navy); padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; z-index:200; border-bottom:2px solid var(--teal); }
+.nav-brand { font-family:var(--serif); color:#fff; font-size:18px; display:flex; align-items:center; gap:10px; white-space:nowrap; }
+.live-badge { background:var(--teal); color:#fff; font-family:var(--mono); font-size:10px; padding:2px 8px; border-radius:20px; letter-spacing:0.08em; animation:pulse 2.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+
+/* Desktop nav */
+.nav-links { display:flex; list-style:none; }
+.nav-links button { background:none; border:none; color:rgba(255,255,255,0.6); font-family:var(--sans); font-size:13px; padding:0 11px; height:60px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:color .15s,border-color .15s; white-space:nowrap; }
+.nav-links button:hover { color:rgba(255,255,255,0.88); }
+.nav-links button.active { color:#fff; border-bottom-color:var(--teal); }
+
+/* Hamburger button */
+.hamburger { display:none; flex-direction:column; justify-content:center; gap:5px; background:none; border:none; cursor:pointer; padding:8px; }
+.hamburger span { display:block; width:22px; height:2px; background:#fff; border-radius:2px; transition:all 0.25s; }
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+/* Mobile dropdown menu */
+.mobile-menu {
+  display:none;
+  position:fixed;
+  top:60px; left:0; right:0;
+  background:var(--navy);
+  border-bottom:2px solid var(--teal);
+  z-index:199;
+  flex-direction:column;
+  padding:0.5rem 0;
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+}
+.mobile-menu.open { display:flex; }
+.mobile-menu button {
+  background:none; border:none;
+  color:rgba(255,255,255,0.7);
+  font-family:var(--sans); font-size:15px;
+  padding:14px 1.5rem;
+  text-align:left; cursor:pointer;
+  border-left:3px solid transparent;
+  transition:all 0.15s;
+  width:100%;
+}
+.mobile-menu button:hover { color:#fff; background:rgba(255,255,255,0.05); }
+.mobile-menu button.active { color:#fff; border-left-color:var(--teal); background:rgba(29,158,117,0.08); }
+
+@media(max-width:720px){
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+}
+
+/* SECTIONS */
+.section { display:none; }
+.section.active { display:block; }
+
+/* HERO */
+.hero { background:var(--navy); color:#fff; padding:3.5rem 2rem 3rem; position:relative; overflow:hidden; }
+.hero-orb { position:absolute; border-radius:50%; background:rgba(29,158,117,0.07); pointer-events:none; }
+.hero-orb-1 { width:340px; height:340px; top:-100px; right:-80px; }
+.hero-orb-2 { width:200px; height:200px; bottom:-60px; left:35%; }
+.hero-inner { max-width:900px; margin:0 auto; position:relative; z-index:1; }
+.hero-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:0.14em; color:rgba(225,245,238,0.85); text-transform:uppercase; margin-bottom:0.9rem; }
+.hero h1 { font-family:var(--serif); font-size:clamp(22px,3.5vw,36px); font-weight:600; line-height:1.22; margin-bottom:0.9rem; max-width:780px; }
+.hero-sub { font-size:14.5px; color:rgba(255,255,255,0.65); max-width:680px; margin-bottom:2.2rem; line-height:1.7; }
+.hero-stats { display:flex; flex-wrap:wrap; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden; max-width:780px; }
+.hero-stat { flex:1; min-width:130px; padding:1rem 1.3rem; border-right:1px solid rgba(255,255,255,0.10); }
+.hero-stat:last-child { border-right:none; }
+.hero-stat .val { font-family:var(--mono); font-size:24px; font-weight:500; color:#fff; display:block; line-height:1.2; }
+.hero-stat .lbl { font-size:11px; color:rgba(255,255,255,0.48); letter-spacing:0.04em; display:block; margin-top:3px; }
+
+.update-bar { background:var(--teal-light); border-left:3px solid var(--teal); padding:0.65rem 2rem; font-size:13px; color:var(--teal-dark); display:flex; align-items:center; gap:9px; }
+.update-bar .dot { width:7px; height:7px; border-radius:50%; background:var(--teal); flex-shrink:0; }
+
+/* PAGE */
+.page { max-width:940px; margin:0 auto; padding:2rem 2rem 3rem; }
+.section-hdr { display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-bottom:1.3rem; flex-wrap:wrap; }
+.section-hdr h2 { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--navy); }
+.section-hdr .sub { font-size:13px; color:var(--text-faint); }
+
+/* CARDS */
+.card { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin-bottom:1.25rem; }
+.card-title { font-family:var(--serif); font-size:15.5px; font-weight:600; color:var(--navy); margin-bottom:1rem; display:flex; align-items:center; gap:9px; }
+.card-icon { width:28px; height:28px; border-radius:6px; background:var(--teal-light); color:var(--teal-dark); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+
+/* CHIPS */
+.chips { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:1rem; }
+.chip { display:inline-flex; align-items:center; gap:5px; background:var(--teal-light); color:var(--teal-dark); border:1px solid rgba(29,158,117,0.22); border-radius:20px; font-family:var(--mono); font-size:12px; padding:3px 10px; }
+.chip-dot { width:6px; height:6px; border-radius:50%; background:var(--teal); flex-shrink:0; }
+.chip.amber { background:var(--amber-light); color:var(--amber); border-color:rgba(186,117,23,0.22); }
+.chip.amber .chip-dot { background:var(--amber); }
+.chip.navy { background:var(--navy-light); color:var(--navy); border-color:rgba(15,34,64,0.18); }
+.chip.navy .chip-dot { background:var(--navy); }
+.ep-label { font-size:12px; font-weight:500; color:var(--text-faint); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:6px; }
+.ep-label+.ep-label,.chips+.ep-label { margin-top:1rem; }
+
+/* TABS (reused for analysis switch) */
+.fp-tabs { display:flex; gap:6px; margin-bottom:1.2rem; flex-wrap:wrap; }
+.fp-tab { padding:6px 14px; border:1px solid var(--border-mid); border-radius:6px; background:var(--white); color:var(--text-muted); font-family:var(--sans); font-size:13px; cursor:pointer; transition:all .15s; }
+.fp-tab:hover { border-color:var(--teal); color:var(--teal-dark); }
+.fp-tab.active { background:var(--navy); border-color:var(--navy); color:#fff; }
+
+/* CONTROLS ROW */
+.fp-controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:1rem; }
+.fp-controls label { font-size:13px; color:var(--text-muted); white-space:nowrap; }
+.fp-controls select { padding:7px 11px; border:1px solid var(--border-mid); border-radius:6px; font-family:var(--sans); font-size:13px; background:var(--white); color:var(--text); cursor:pointer; outline:none; }
+.fp-controls select:focus { border-color:var(--teal); }
+.fp-filename { display:none; }
+
+/* IMAGE AREA */
+.fp-image-wrap { width:100%; min-height:200px; }
+.fp-image-wrap img { width:100%; border-radius:6px; border:1px solid var(--border); display:block; }
+.fp-placeholder { display:none; padding:2.5rem 2rem; text-align:center; background:var(--surface); border-radius:8px; border:2px dashed var(--border-mid); }
+.fp-placeholder .pl-title { font-size:15px; font-weight:500; color:var(--navy); margin-bottom:6px; }
+.fp-placeholder .pl-desc { font-size:13px; color:var(--text-muted); max-width:460px; margin:0 auto 1.4rem; line-height:1.7; }
+.fp-code { font-family:var(--mono); font-size:12px; background:var(--navy); color:rgba(255,255,255,0.72); padding:1rem 1.2rem; border-radius:6px; text-align:left; max-width:500px; margin:0 auto; line-height:1.9; }
+.fp-code .kw{color:#9fc5f8;} .fp-code .str{color:#ffd89a;} .fp-code .cm{color:rgba(29,158,117,0.85);}
+
+/* FILENAME LEGEND */
+.filename-grid { display:grid; grid-template-columns:auto 1fr; gap:4px 18px; font-size:12px; font-family:var(--mono); line-height:1.9; }
+.filename-grid .fn { color:var(--text-muted); }
+.filename-grid .fc { color:var(--teal); font-size:11px; }
+
+/* PRISMA */
+.prisma-wrap { overflow-x:auto; }
+
+/* TIMELINE */
+.timeline { position:relative; padding-left:2rem; }
+.timeline::before { content:''; position:absolute; left:7px; top:6px; bottom:6px; width:2px; background:var(--border); border-radius:1px; }
+.tl-item { position:relative; margin-bottom:1.6rem; }
+.tl-dot { position:absolute; left:-2rem; top:4px; width:16px; height:16px; border-radius:50%; background:var(--white); border:2px solid var(--teal); z-index:1; }
+.tl-dot.current { background:var(--teal); }
+.tl-date { font-family:var(--mono); font-size:11px; color:var(--teal-dark); margin-bottom:2px; }
+.tl-title { font-weight:500; font-size:14px; color:var(--navy); margin-bottom:3px; }
+.tl-desc { font-size:13px; color:var(--text-muted); line-height:1.65; }
+.tl-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:7px; }
+.tl-tag { font-size:11px; padding:2px 8px; border-radius:20px; background:var(--surface); border:1px solid var(--border); color:var(--text-muted); }
+
+/* DOWNLOAD */
+.dl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; }
+.dl-item { border:1px solid var(--border); border-radius:8px; padding:1rem 1.1rem; background:var(--white); display:flex; flex-direction:column; gap:5px; transition:border-color .15s; }
+.dl-item:hover { border-color:var(--teal); }
+.dl-icon { font-size:22px; margin-bottom:2px; }
+.dl-name { font-size:13px; font-weight:500; color:var(--navy); }
+.dl-meta { font-family:var(--mono); font-size:11px; color:var(--text-faint); }
+.dl-btn { margin-top:6px; padding:6px 12px; background:var(--navy); color:#fff; border:none; border-radius:6px; font-size:12px; font-family:var(--sans); cursor:pointer; text-decoration:none; text-align:center; display:inline-block; transition:background .15s; }
+.dl-btn:hover { background:var(--navy-mid); }
+
+/* ABOUT */
+.author-chip { display:inline-flex; align-items:center; gap:7px; background:var(--navy-light); color:var(--navy); border-radius:6px; font-size:12.5px; padding:5px 10px; margin:3px 3px 3px 0; }
+.author-chip .init { width:22px; height:22px; border-radius:50%; background:var(--navy); color:#fff; font-size:9px; font-weight:500; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.disclaimer { border:1px solid rgba(186,117,23,0.3); background:var(--amber-light); border-radius:8px; padding:1rem 1.25rem; font-size:13px; color:#5c3a08; line-height:1.7; margin-top:1.25rem; }
+.disclaimer strong { color:var(--amber); }
+
+/* SUBGROUP FACTOR GRID */
+.sg-factor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+  margin-bottom: 1.2rem;
+}
+.sg-factor-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--border-mid);
+  border-radius: 7px;
+  background: var(--white);
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
+  line-height: 1.4;
+}
+.sg-factor-btn:hover { border-color: var(--teal); color: var(--teal-dark); background: var(--teal-light); }
+.sg-factor-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.sg-factor-btn .sg-cat {
+  display: block;
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 2px;
+  font-family: var(--mono);
+}
+
+/* RESPONSIVE */
+@media(max-width:680px){
+  .nav-links button { padding:0 6px; font-size:11px; }
+  .hero-stats { flex-direction:column; }
+  .hero-stat { border-right:none; border-bottom:1px solid rgba(255,255,255,0.10); }
+  .sg-factor-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Immunorad <span class="live-badge">LIVING</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><button class="active" onclick="showSection('overview')">Overview</button></li>
+    <li><button onclick="showSection('forest')" class="">Forest plots</button></li>
+    <li><button onclick="showSection('subgroup')" class="">Subgroups</button></li>
+    <li><button onclick="showSection('prisma')" class="">PRISMA</button></li>
+    <li><button onclick="showSection('timeline')" class="">Timeline</button></li>
+    <li><button onclick="showSection('download')" class="">Download</button></li>
+    <li><button onclick="showSection('about')" class="">About</button></li>
+    <li><button onclick="showSection('citations')" class="">Citations</button></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile dropdown -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="active" onclick="showSection('overview');closeMenu()">Overview</button>
+  <button onclick="showSection('forest');closeMenu()" class="">Forest plots</button>
+  <button onclick="showSection('subgroup');closeMenu()" class="">Subgroups</button>
+  <button onclick="showSection('prisma');closeMenu()" class="">PRISMA</button>
+  <button onclick="showSection('timeline');closeMenu()" class="">Timeline</button>
+  <button onclick="showSection('download');closeMenu()" class="">Download</button>
+  <button onclick="showSection('about');closeMenu()" class="">About</button>
+  <button onclick="showSection('citations');closeMenu()" class="">Citations</button>
+</div>
+
+<!-- ══════════════ OVERVIEW ══════════════ -->
+<div id="overview" class="section active">
+  <div class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Living Systematic Review &amp; Meta-Analysis · Randomized Controlled Trials</div>
+      <h1>Radiotherapy and Immune Checkpoint Inhibitors in Solid Tumors</h1>
+      <p class="hero-sub">An ongoing, continuously updated meta-analysis evaluating the survival impact of combining radiotherapy with immune checkpoint inhibitors (ICIs) across solid tumors. Search updated through September 3, 2026.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="val">51</span><span class="lbl">Randomized trials</span></div>
+        <div class="hero-stat"><span class="val">16,678</span><span class="lbl">Patients included</span></div>
+        <div class="hero-stat"><span class="val">42</span><span class="lbl">ICI vs no-ICI trials</span></div>
+        <div class="hero-stat"><span class="val">9</span><span class="lbl">RT vs no-RT trials</span></div>
+        <div class="hero-stat"><span class="val">12</span><span class="lbl">Tumor types</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="update-bar">
+    <span class="dot"></span>
+    <strong>Search updated through:</strong>&nbsp;September 3, 2026 — next update scheduled March 2027
+  </div>
+
+  <div class="page">
+    <div class="section-hdr"><h2>Key results</h2><span class="sub">Random-effects meta-analysis (REML)</span></div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-icon">💉</span>Immune checkpoint inhibitors (ICIs) added to radiotherapy — 42 trials</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.1rem;line-height:1.7;">Trials comparing ICI + radiotherapy versus radiotherapy alone.</p>
+      <p class="ep-label">Overall Survival (OS) · n=33 trials</p>
+      <div class="chips">
+        <span class="chip"><span class="chip-dot"></span>HR 0.86 (95% CI 0.75–1.00)</span>
+        <span class="chip"><span class="chip-dot"></span>p = 0.046</span>
+        <span class="chip navy"><span class="chip-dot"></span>Excl. glioblastoma: HR 0.82 (0.70–0.96), p=0.016</span>
+      </div>
+      <p class="ep-label">Progression-Free Survival (PFS) · n=33 trials</p>
+      <div class="chips">
+        <span class="chip"><span class="chip-dot"></span>HR 0.78 (95% CI 0.68–0.90)</span>
+        <span class="chip"><span class="chip-dot"></span>p &lt; 0.001</span>
+        <span class="chip navy"><span class="chip-dot"></span>Excl. glioblastoma: HR 0.72 (0.61–0.84), p&lt;0.001</span>
+      </div>
+      <p class="ep-label">Event-Free Survival (EFS) · n=8 trials</p>
+      <div class="chips">
+        <span class="chip"><span class="chip-dot"></span>HR 0.71 (95% CI 0.53–0.95)</span>
+        <span class="chip"><span class="chip-dot"></span>p = 0.022</span>
+      </div>
+      <div style="border-top:1px solid var(--border);margin-top:1.1rem;padding-top:1rem;font-size:13px;color:var(--text-muted);line-height:1.7;">
+        <strong style="color:var(--navy);">Sequencing effect:</strong> Adjuvant ICI schedules show the most favorable pooled estimates (OS HR 0.80, PFS HR 0.70) versus concurrent (OS HR 0.94, PFS HR 0.88); induction is similar to adjuvant. The adjuvant-versus-concurrent difference was significant in v1 (OS p=0.035, PFS p=0.017) but is attenuated and no longer significant with the added trials (OS p=0.07, PFS p=0.07).
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-icon">☢️</span>Radiotherapy added to ICIs — 9 trials</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.1rem;line-height:1.7;">Trials comparing ICI + radiotherapy versus ICIs alone. NSCLC (n=3), SCLC (n=3), kidney (n=2), advanced solid tumors (n=1).</p>
+      <p class="ep-label">Overall Survival (OS) · n=8 trials</p>
+      <div class="chips">
+        <span class="chip amber"><span class="chip-dot"></span>HR 0.89 (95% CI 0.63–1.25)</span>
+        <span class="chip amber"><span class="chip-dot"></span>p = 0.499</span>
+      </div>
+      <p class="ep-label">Progression-Free Survival (PFS) · n=9 trials</p>
+      <div class="chips">
+        <span class="chip amber"><span class="chip-dot"></span>HR 0.88 (95% CI 0.63–1.23)</span>
+        <span class="chip amber"><span class="chip-dot"></span>p = 0.450</span>
+      </div>
+      <div style="border-top:1px solid var(--border);margin-top:1.1rem;padding-top:1rem;font-size:13px;color:var(--text-muted);line-height:1.7;">
+        <strong style="color:var(--navy);">Interpretation:</strong> Across nine trials there is no statistically significant benefit for either OS (HR 0.89, 95% CI 0.63–1.25) or PFS (HR 0.88, 0.63–1.23), with substantial between-study heterogeneity (OS I²=64%). Estimates remain limited by the small number of trials.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FOREST PLOTS ══════════════ -->
+<div id="forest" class="section">
+  <div class="page">
+    <div class="section-hdr"><h2>Forest plots</h2><span class="sub">Generated by R · metafor package</span></div>
+    <div class="card">
+      <div class="fp-tabs">
+        <button class="fp-tab active" onclick="setAnalysis('ici')">ICIs added to RT (42 trials)</button>
+        <button class="fp-tab" onclick="setAnalysis('rt')">RT added to ICIs (9 trials)</button>
+      </div>
+
+      <div id="iciControls">
+        <div class="fp-controls">
+          <label>Tumor type:</label>
+          <select id="tumorSelect" onchange="updateForestPlot()">
+            <option value="all">All tumors (by tumor type)</option>
+            <option value="glioblastoma">Glioblastoma</option>
+            <option value="head and neck">Head and neck cancer</option>
+            <option value="nasopharyngeal">Nasopharyngeal cancer</option>
+            <option value="non-small-cell lung">NSCLC</option>
+            <option value="small-cell lung">SCLC</option>
+            <option value="esophageal">Esophageal cancer</option>
+            <option value="rectal">Rectal cancer</option>
+            <option value="pancreatic">Pancreatic cancer</option>
+            <option value="cervical">Cervical cancer</option>
+            <option value="prostate">Prostate cancer</option>
+            <option value="sarcoma">Sarcoma</option>
+            <option value="cutaneous squamous-cell carcinoma">Cutaneous squamous-cell carcinoma</option>
+          </select>
+          <label>Endpoint:</label>
+          <select id="endpointSelect" onchange="updateForestPlot()">
+            <option value="OS">Overall Survival (OS)</option>
+            <option value="PFS">Progression-Free Survival (PFS)</option>
+            <option value="EFS">Event-Free Survival (EFS)</option>
+          </select>
+          <span class="fp-filename" id="fpFilename">figures/Forest_OS_by_tumor_type.png</span>
+        </div>
+      </div>
+
+      <div id="rtControls" style="display:none;">
+        <div class="fp-controls">
+          <label>Endpoint:</label>
+          <select id="rtEndpointSelect" onchange="updateForestPlot()">
+            <option value="OS">Overall Survival (OS)</option>
+            <option value="PFS">Progression-Free Survival (PFS)</option>
+          </select>
+          <span class="fp-filename" id="rtFpFilename">figures/Forest_OS_by_tumor_type_RTvsNoRT.png</span>
+        </div>
+      </div>
+
+      <div class="fp-image-wrap">
+        <img id="forestImg" src="figures/Forest_OS_by_tumor_type.png" alt="Forest plot" onerror="showFpPlaceholder('fp')" style="display: block;">
+        <div class="fp-placeholder" id="fpPlaceholder" style="display: none;">
+          <div class="pl-title">Forest plot not yet available</div>
+          <div class="pl-desc">Export this figure from R and push to your GitHub repo. The website loads it automatically.</div>
+          <div class="fp-code">
+            <span class="cm"># Export OS forest plot</span><br>
+            <span class="kw">pdf</span>(file.path(out_dir, <span class="str">"Forest_OS_by_tumor_type.pdf"</span>), ...)<br>
+            forest_with_two_bottom_pools(...)<br>
+            dev.off()<br>
+            <span class="kw">pdf_convert</span>(..., format=<span class="str">"png"</span>, dpi=300)
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:0.9rem;display:flex;justify-content:flex-end;">
+        <a id="fpDownloadLink" href="figures/Forest_OS_by_tumor_type.pdf" target="_blank" style="font-size:13px;color:var(--teal-dark);text-decoration:none;font-family:var(--mono);">↓ Download PDF</a>
+      </div>
+    </div>
+
+    <div class="card" style="display:none;">
+      <div class="card-title"><span class="card-icon">📋</span>R filename convention</div>
+      <div class="filename-grid">
+        <span class="fn">figures/Forest_OS_by_tumor_type.png</span>            <span class="fc">← all tumors, OS (ICI analysis)</span>
+        <span class="fn">figures/Forest_PFS_by_tumor_type.png</span>           <span class="fc">← all tumors, PFS</span>
+        <span class="fn">figures/Forest_EFS_by_tumor_type.png</span>           <span class="fc">← all tumors, EFS</span>
+        <span class="fn">figures/OS_nsclc.png</span>                           <span class="fc">← per tumor (slugified)</span>
+        <span class="fn">figures/OS_head_and_neck.png</span>                   <span class="fc">← per tumor</span>
+        <span class="fn">figures/OS_cutaneous_squamous_cell_carcinoma.png</span> <span class="fc">← slugified</span>
+        <span class="fn">figures/Forest_OS_by_tumor_type_RTvsNoRT.png</span>   <span class="fc">← RT analysis, OS</span>
+        <span class="fn">figures/Forest_PFS_by_tumor_type_RTvsNoRT.png</span>  <span class="fc">← RT analysis, PFS</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SUBGROUP ANALYSES ══════════════ -->
+<div id="subgroup" class="section">
+  <div class="page">
+    <div class="section-hdr"><h2>Subgroup analyses</h2><span class="sub">Meta-regression · REML · Generated by R</span></div>
+
+    <div class="card">
+      <!-- Analysis toggle -->
+      <div class="fp-tabs" style="margin-bottom:1rem;">
+        <button class="fp-tab active" onclick="setSgAnalysis('io')">ICIs added to RT</button>
+        <button class="fp-tab" onclick="setSgAnalysis('rt')">RT added to ICIs</button>
+      </div>
+
+      <!-- Endpoint toggle -->
+      <div id="sgEndpointRow" class="fp-controls" style="margin-bottom:1.2rem;">
+        <label>Endpoint:</label>
+        <select id="sgEndpoint" onchange="updateSubgroupPlot()">
+          <option value="OS">Overall Survival (OS)</option>
+          <option value="PFS">Progression-Free Survival (PFS)</option>
+        </select>
+        <span class="fp-filename" id="sgFilename">figures/Subgroup_OS_Timing.png</span>
+      </div>
+
+      <!-- Factor buttons — ICI analysis -->
+      <div id="sgFactorsIO">
+        <p style="font-size:12px;color:var(--text-faint);margin-bottom:8px;letter-spacing:0.04em;text-transform:uppercase;font-weight:500;">Select subgroup factor</p>
+        <div class="sg-factor-grid" id="sgGridIO"><button class="sg-factor-btn" data-col="Timing">ICI timing<span class="sg-cat">Induction · Concurrent · Adjuvant</span></button><button class="sg-factor-btn" data-col="Tumortype_GBM">Tumor type (GBM)<span class="sg-cat">Glioblastoma · Non-glioblastoma</span></button><button class="sg-factor-btn" data-col="Chemo">Radiotherapy type<span class="sg-cat">Chemoradiotherapy · Radiotherapy</span></button><button class="sg-factor-btn" data-col="RT_Type3">RT modality<span class="sg-cat">SBRT · CRT · Conventional</span></button><button class="sg-factor-btn" data-col="antiPDL1only">Anti-PD-L1<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="antiPD1only">Anti-PD-1<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="antiCTLA4only">Anti-CTLA-4<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="Design">Trial phase<span class="sg-cat">Phase II · Phase III</span></button><button class="sg-factor-btn" data-col="OpenBlind">Blinding<span class="sg-cat">Open · Blind</span></button><button class="sg-factor-btn" data-col="Surgery">Surgery<span class="sg-cat">No · Pre RT · Post RT</span></button><button class="sg-factor-btn" data-col="ENI">Elective nodal irrad.<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="AgeUnder61">Age ≤60<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="MaleTreatment_ge70">Male ≥70%<span class="sg-cat">&lt;70 · ≥70</span></button><button class="sg-factor-btn" data-col="n_over_299">Sample size &gt;299<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="FollowMore30">Follow-up ≥30 mo<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="Abstract_only">Publication type<span class="sg-cat">Full · Abstract-only</span></button><button class="sg-factor-btn" data-col="Global_location_PFS">Geographic region<span class="sg-cat">Global · Western · Eastern</span></button><button class="sg-factor-btn" data-col="Publ_before_2025">Published before 2025<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="WichFirstDichotomous">First modality<span class="sg-cat">RT first · IO first</span></button><button class="sg-factor-btn" data-col="ImmunoradWithin30d">Start within 30 days<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="Single_Multi">Center type<span class="sg-cat">Single · Multi</span></button><button class="sg-factor-btn" data-col="Premature_closure">Premature closure<span class="sg-cat">Yes · No</span></button></div>
+      </div>
+
+      <!-- Factor buttons — RT analysis -->
+      <div id="sgFactorsRT" style="display:none;">
+        <p style="font-size:12px;color:var(--text-faint);margin-bottom:8px;letter-spacing:0.04em;text-transform:uppercase;font-weight:500;">Select subgroup factor</p>
+        <div class="sg-factor-grid" id="sgGridRT"><button class="sg-factor-btn" data-col="antiPD1only">Anti-PD-1<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="Tumortype_GBM">Tumor type (GBM)<span class="sg-cat">Glioblastoma · Non-glioblastoma</span></button><button class="sg-factor-btn" data-col="n_over_75">Sample size &gt;75<span class="sg-cat">Yes · No</span></button><button class="sg-factor-btn" data-col="Publ_before_2022">Published before 2022<span class="sg-cat">Yes · No</span></button></div>
+      </div>
+
+      <!-- Image -->
+      <div class="fp-image-wrap" style="margin-top:1rem;">
+        <img id="sgImg" src="" alt="Subgroup forest plot" style="display:none;" onerror="showFpPlaceholder('sg')">
+        <div class="fp-placeholder" id="sgPlaceholder">
+          <div class="pl-title">Select a subgroup factor above</div>
+          <div class="pl-desc">
+            Click any factor button to load its forest plot. Export subgroup figures from R using the naming convention below, then push to GitHub.
+          </div>
+          <div class="fp-code">
+            <span class="cm"># Example: export Timing subgroup OS plot</span><br>
+            <span class="kw">png</span>(<span class="str">"figures/Subgroup_OS_Timing.png"</span>, width=2400, height=1400, res=200)<br>
+            <span class="cm"># your subgroup forest plot code</span><br>
+            dev.off()
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:0.9rem;display:flex;justify-content:flex-end;">
+        <a id="sgDownloadLink" href="#" target="_blank" style="font-size:13px;color:var(--teal-dark);text-decoration:none;font-family:var(--mono);display:none;">↓ Download PDF</a>
+      </div>
+    </div>
+
+    <!-- Filename reference -->
+    <div class="card" style="display:none;">
+      <div class="card-title"><span class="card-icon">📋</span>R filename convention for subgroup plots</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:1rem;">
+        Save each subgroup forest plot as <code style="font-family:var(--mono);background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border);">figures/Subgroup_[ENDPOINT]_[FACTOR].png</code>, where <code style="font-family:var(--mono);background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border);">[FACTOR]</code> is the exact column name from your R script:
+      </p>
+      <div class="filename-grid">
+        <span class="fn">figures/Subgroup_OS_Timing.png</span>              <span class="fc">← ICI timing (Induction / Concurrent / Adjuvant)</span>
+        <span class="fn">figures/Subgroup_PFS_Timing.png</span>             <span class="fc">← same, PFS</span>
+        <span class="fn">figures/Subgroup_OS_Tumortype_GBM.png</span>       <span class="fc">← Glioblastoma vs Non-glioblastoma</span>
+        <span class="fn">figures/Subgroup_OS_RT_Type3.png</span>            <span class="fc">← SBRT / Chemoradiotherapy / Conventional</span>
+        <span class="fn">figures/Subgroup_OS_Chemo.png</span>               <span class="fc">← CRT vs RT alone</span>
+        <span class="fn">figures/Subgroup_OS_Solo_adjuvant.png</span>       <span class="fc">← Adjuvant vs Non-exclusive adjuvant</span>
+        <span class="fn">figures/Subgroup_OS_Design.png</span>              <span class="fc">← Phase II vs Phase III</span>
+        <span class="fn">figures/Subgroup_OS_Surgery.png</span>             <span class="fc">← No / Pre / Post radiotherapy</span>
+        <span class="fn">figures/Subgroup_OS_OpenBlind.png</span>           <span class="fc">← Open vs Blind</span>
+        <span class="fn">figures/Subgroup_OS_antiPDL1only.png</span>        <span class="fc">← Anti-PD-L1 vs other</span>
+        <span class="fn">figures/Subgroup_OS_antiPD1only.png</span>         <span class="fc">← Anti-PD-1 vs other</span>
+        <span class="fn">figures/Subgroup_OS_antiCTLA4only.png</span>       <span class="fc">← Anti-CTLA-4 vs other</span>
+        <span class="fn">figures/Subgroup_OS_ENI.png</span>                 <span class="fc">← Elective nodal irradiation</span>
+        <span class="fn">figures/Subgroup_OS_AgeUnder61.png</span>          <span class="fc">← Age ≤60 vs &gt;60</span>
+        <span class="fn">figures/Subgroup_OS_n_over_299.png</span>          <span class="fc">← Sample size &gt;299</span>
+        <span class="fn">figures/Subgroup_OS_FollowMore30.png</span>        <span class="fc">← Follow-up ≥30 months</span>
+        <span class="fn">figures/Subgroup_OS_MaleTreatment_ge70.png</span> <span class="fc">← Male % ≥70</span>
+        <span class="fn">figures/Subgroup_OS_Abstract_only.png</span>      <span class="fc">← Abstract-only vs full publication</span>
+        <span class="fn">figures/Subgroup_OS_Global_location_PFS.png</span><span class="fc">← Geographic region</span>
+        <span class="fn">figures/Subgroup_PFS_antiPD1only.png</span>       <span class="fc">← RT analysis: anti-PD-1 (PFS only)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PRISMA ══════════════ -->
+<div id="prisma" class="section">
+  <div class="page">
+    <div class="section-hdr"><h2>PRISMA flow diagram</h2><span class="sub">Study selection — cumulative, Jan 2010 to Sep 2026</span></div>
+    <div class="card">
+      <div class="prisma-wrap">
+        <svg viewBox="0 0 700 630" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:0 auto;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L0,7 L8,3.5 z" fill="#4a5568"></path>
+            </marker>
+          </defs>
+          <text x="30" y="26" font-family="'Instrument Sans',sans-serif" font-size="10" font-weight="500" letter-spacing="0.09em" fill="#8a9bb0">IDENTIFICATION</text>
+          <rect x="30" y="36" width="295" height="68" rx="6" fill="#e1f5ee" stroke="#1d9e75" stroke-width="1.2"></rect>
+          <text x="177" y="60" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="13" font-weight="500" fill="#0f6e56">Records identified</text>
+          <text x="177" y="78" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11.5" fill="#0f6e56">PubMed + EMBASE (n = 7,182)</text>
+          <text x="177" y="95" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11.5" fill="#0f6e56">Cross-referencing (n = 1)</text>
+          <rect x="390" y="44" width="280" height="48" rx="6" fill="#f7f6f3" stroke="#d3d1c7" stroke-width="1"></rect>
+          <text x="530" y="65" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="12" fill="#5f5e5a">Duplicates removed</text>
+          <text x="530" y="82" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" fill="#888780">n = 1,006</text>
+          <line x1="177" y1="104" x2="177" y2="144" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arr)"></line>
+          <line x1="325" y1="68" x2="390" y2="68" stroke="#4a5568" stroke-width="1.2" marker-end="url(#arr)"></line>
+
+          <text x="30" y="162" font-family="'Instrument Sans',sans-serif" font-size="10" font-weight="500" letter-spacing="0.09em" fill="#8a9bb0">SCREENING</text>
+          <rect x="30" y="172" width="295" height="48" rx="6" fill="#e1f5ee" stroke="#1d9e75" stroke-width="1.2"></rect>
+          <text x="177" y="193" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="13" font-weight="500" fill="#0f6e56">Unique records screened</text>
+          <text x="177" y="210" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" fill="#0f6e56">n = 6,176</text>
+          <rect x="390" y="172" width="280" height="48" rx="6" fill="#fcebeb" stroke="#a32d2d" stroke-width="1"></rect>
+          <text x="530" y="193" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="12" fill="#791f1f">Excluded on title/abstract</text>
+          <text x="530" y="210" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" fill="#a32d2d">n = 5,862</text>
+          <line x1="177" y1="220" x2="177" y2="260" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arr)"></line>
+          <line x1="325" y1="196" x2="390" y2="196" stroke="#4a5568" stroke-width="1.2" marker-end="url(#arr)"></line>
+
+          <text x="30" y="278" font-family="'Instrument Sans',sans-serif" font-size="10" font-weight="500" letter-spacing="0.09em" fill="#8a9bb0">ELIGIBILITY</text>
+          <rect x="30" y="288" width="295" height="48" rx="6" fill="#e1f5ee" stroke="#1d9e75" stroke-width="1.2"></rect>
+          <text x="177" y="309" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="13" font-weight="500" fill="#0f6e56">Full texts assessed</text>
+          <text x="177" y="326" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" fill="#0f6e56">n = 314</text>
+          <rect x="390" y="273" width="280" height="88" rx="6" fill="#fcebeb" stroke="#a32d2d" stroke-width="1"></rect>
+          <text x="530" y="294" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="12" fill="#791f1f">Excluded — full text (n=263)</text>
+          <text x="530" y="311" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10.5" fill="#a32d2d">Not most recent report (n=95)</text>
+          <text x="530" y="326" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10.5" fill="#a32d2d">Ineligible design/protocol (n=71)</text>
+          <text x="530" y="341" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10.5" fill="#a32d2d">No survival outcomes (n=71)</text>
+          <text x="530" y="356" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10.5" fill="#a32d2d">No ICIs / other reasons (n=26)</text>
+          <line x1="177" y1="336" x2="177" y2="376" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arr)"></line>
+          <line x1="325" y1="312" x2="390" y2="312" stroke="#4a5568" stroke-width="1.2" marker-end="url(#arr)"></line>
+
+          <text x="30" y="394" font-family="'Instrument Sans',sans-serif" font-size="10" font-weight="500" letter-spacing="0.09em" fill="#8a9bb0">INCLUSION</text>
+          <rect x="30" y="404" width="295" height="72" rx="6" fill="#0f2240" stroke="#0f2240"></rect>
+          <text x="177" y="428" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="13" font-weight="500" fill="#ffffff">Included in meta-analysis</text>
+          <text x="177" y="449" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" fill="#9fe1cb">n = 51 randomized trials</text>
+          <text x="177" y="467" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11.5" fill="rgba(255,255,255,0.55)">16,678 patients</text>
+          <line x1="177" y1="476" x2="177" y2="514" stroke="#4a5568" stroke-width="1.5"></line>
+          <line x1="177" y1="514" x2="88" y2="514" stroke="#4a5568" stroke-width="1.5"></line>
+          <line x1="177" y1="514" x2="266" y2="514" stroke="#4a5568" stroke-width="1.5"></line>
+          <line x1="88" y1="514" x2="88" y2="534" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arr)"></line>
+          <line x1="266" y1="514" x2="266" y2="534" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arr)"></line>
+          <rect x="30" y="534" width="120" height="60" rx="6" fill="#e1f5ee" stroke="#1d9e75" stroke-width="1.2"></rect>
+          <text x="90" y="556" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="11" font-weight="500" fill="#0f6e56">ICI vs no ICI</text>
+          <text x="90" y="572" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" fill="#0f6e56">42 trials</text>
+          <text x="90" y="586" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#0f6e56">OS · PFS · EFS</text>
+          <rect x="206" y="534" width="120" height="60" rx="6" fill="#faeeda" stroke="#ba7517" stroke-width="1.2"></rect>
+          <text x="266" y="556" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="11" font-weight="500" fill="#854f0b">RT vs no RT</text>
+          <text x="266" y="572" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" fill="#ba7517">9 trials</text>
+          <text x="266" y="586" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#ba7517">OS · PFS</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TIMELINE ══════════════ -->
+<div id="timeline" class="section">
+  <div class="page">
+    <div class="section-hdr"><h2>Update timeline</h2><span class="sub">Version history of the living review</span></div>
+    <div class="card">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">January 2026 · v1.0 — Initial publication</div>
+          <div class="tl-title">First version — 41 trials, 15,049 patients</div>
+          <div class="tl-desc">Systematic search of PubMed and EMBASE (Jan 2010–Jan 2026), plus one trial identified through cross-referencing. 41 randomized trials included: 35 ICI vs no-ICI and 6 RT vs no-RT trials. Pre-registered on PROSPERO (CRD42024596888).</div>
+          <div class="tl-tags"><span class="tl-tag">41 trials</span><span class="tl-tag">15,049 patients</span><span class="tl-tag">OS · PFS · EFS</span><span class="tl-tag">PROSPERO: CRD42024596888</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot current"></div>
+          <div class="tl-date">September 2026 · v2.0 — First living update</div>
+          <div class="tl-title">Second version — 51 trials, 16,678 patients</div>
+          <div class="tl-desc">Six-month search update of PubMed and EMBASE (through 3 September 2026), same predefined strategy and eligibility criteria. Ten new randomized trials added (7 ICI vs no-ICI, 3 RT vs no-RT), including the first rectal cancer trials. Main changes versus v1: <strong>First</strong>, pooled OS for ICIs added to radiotherapy reached statistical significance — HR 0.86 (95% CI 0.75–1.00, p=0.046), and HR 0.82 (0.70–0.96, p=0.016) excluding glioblastoma. <strong>Second</strong>, the PFS benefit strengthened to HR 0.78 (0.68–0.90, p&lt;0.001) and EFS to HR 0.71 (0.53–0.95, p=0.022). <strong>Third</strong>, the advantage of adjuvant over concurrent ICI timing was attenuated and is no longer statistically significant with the added trials (adjuvant vs concurrent: OS p=0.07, PFS p=0.07; v1 p=0.035 and p=0.017). Adjuvant schedules keep the most favorable pooled estimates (OS HR 0.80, PFS HR 0.70) versus concurrent (OS 0.94, PFS 0.88); induction is similar to adjuvant.</div>
+          <div class="tl-tags"><span class="tl-tag">51 trials</span><span class="tl-tag">16,678 patients</span><span class="tl-tag">10 new trials</span><span class="tl-tag">+ rectal cancer</span><span class="tl-tag">OS now significant</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">March 2027 · v3.0 — Scheduled</div>
+          <div class="tl-title">Next update — search through early 2027</div>
+          <div class="tl-desc">Planned update using the same predefined search strategy and eligibility criteria. New eligible studies will be incorporated and results published here.</div>
+          <div class="tl-tags"><span class="tl-tag">Scheduled</span><span class="tl-tag">6-month cycle</span></div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding:0.9rem 1rem;background:var(--surface);border-radius:7px;border:1px solid var(--border);font-size:13px;color:var(--text-muted);line-height:1.7;">
+        <strong style="color:var(--navy);">Living review protocol:</strong> The search is updated every six months using the same predefined strategy and eligibility criteria. Future updates remain focused on immune checkpoint inhibitors to preserve methodological consistency over time.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DOWNLOAD ══════════════ -->
+<div id="download" class="section">
+  <div class="page">
+    <div class="section-hdr"><h2>Downloads</h2><span class="sub">Automatically updated when R pushes new figures to GitHub</span></div>
+    <div class="card">
+      <div class="card-title"><span class="card-icon">💉</span>Forest plots — ICIs added to RT</div>
+      <div class="dl-grid">
+        <div class="dl-item"><div class="dl-icon">📊</div><div class="dl-name">OS — All tumors</div><div class="dl-meta">Forest_OS_by_tumor_type</div><a class="dl-btn" href="figures/Forest_OS_by_tumor_type.pdf" target="_blank">↓ PDF</a></div>
+        <div class="dl-item"><div class="dl-icon">📊</div><div class="dl-name">PFS — All tumors</div><div class="dl-meta">Forest_PFS_by_tumor_type</div><a class="dl-btn" href="figures/Forest_PFS_by_tumor_type.pdf" target="_blank">↓ PDF</a></div>
+        <div class="dl-item"><div class="dl-icon">📊</div><div class="dl-name">EFS — All tumors</div><div class="dl-meta">Forest_EFS_by_tumor_type</div><a class="dl-btn" href="figures/Forest_EFS_by_tumor_type.pdf" target="_blank">↓ PDF</a></div>
+        <div class="dl-item"><div class="dl-icon">🖼️</div><div class="dl-name">OS — PNG</div><div class="dl-meta">Forest_OS_by_tumor_type</div><a class="dl-btn" href="figures/Forest_OS_by_tumor_type.png" download="">↓ PNG</a></div>
+        <div class="dl-item"><div class="dl-icon">🖼️</div><div class="dl-name">PFS — PNG</div><div class="dl-meta">Forest_PFS_by_tumor_type</div><a class="dl-btn" href="figures/Forest_PFS_by_tumor_type.png" download="">↓ PNG</a></div>
+        <div class="dl-item"><div class="dl-icon">🖼️</div><div class="dl-name">EFS — PNG</div><div class="dl-meta">Forest_EFS_by_tumor_type</div><a class="dl-btn" href="figures/Forest_EFS_by_tumor_type.png" download="">↓ PNG</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-icon">☢️</span>Forest plots — RT added to ICIs</div>
+      <div class="dl-grid">
+        <div class="dl-item"><div class="dl-icon">📊</div><div class="dl-name">OS — RT vs no RT</div><div class="dl-meta">Forest_OS_RTvsNoRT</div><a class="dl-btn" href="figures/Forest_OS_by_tumor_type_RTvsNoRT.pdf" target="_blank">↓ PDF</a></div>
+        <div class="dl-item"><div class="dl-icon">📊</div><div class="dl-name">PFS — RT vs no RT</div><div class="dl-meta">Forest_PFS_RTvsNoRT</div><a class="dl-btn" href="figures/Forest_PFS_by_tumor_type_RTvsNoRT.pdf" target="_blank">↓ PDF</a></div>
+        <div class="dl-item"><div class="dl-icon">🖼️</div><div class="dl-name">OS — PNG</div><div class="dl-meta">Forest_OS_RTvsNoRT</div><a class="dl-btn" href="figures/Forest_OS_by_tumor_type_RTvsNoRT.png" download="">↓ PNG</a></div>
+        <div class="dl-item"><div class="dl-icon">🖼️</div><div class="dl-name">PFS — PNG</div><div class="dl-meta">Forest_PFS_RTvsNoRT</div><a class="dl-btn" href="figures/Forest_PFS_by_tumor_type_RTvsNoRT.png" download="">↓ PNG</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-icon">📁</span>Data files</div>
+      <div class="dl-grid">
+        <div class="dl-item"><div class="dl-icon">📄</div><div class="dl-name">Available tumor types</div><div class="dl-meta">results/available_tumors.json</div><a class="dl-btn" href="results/available_tumors.json" target="_blank">↗ View</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ABOUT ══════════════ -->
+<div id="about" class="section">
+  <div class="page">
+    <div class="section-hdr"><h2>About this study</h2></div>
+    <div class="card">
+      <div class="card-title"><span class="card-icon">📄</span>Publication</div>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.8;margin-bottom:0.75rem;">
+        <strong style="color:var(--navy);">Title:</strong> The survival impact of combining radiotherapy and immune checkpoint inhibitors in patients with solid tumors: a systematic review and living meta-analysis of randomized controlled trials.
+      </p>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.75;">
+        <strong style="color:var(--navy);">Journal:</strong> European Journal of Cancer (EJC) &nbsp;·&nbsp;
+        <strong style="color:var(--navy);">Type:</strong> Systematic review &amp; meta-analysis &nbsp;·&nbsp;
+        <strong style="color:var(--navy);">PROSPERO:</strong> <a href="http://www.crd.york.ac.uk/prospero" style="color:var(--teal-dark);">CRD42024596888</a>
+      </p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-icon">👥</span>Authors — Amsterdam UMC &amp; Gustave Roussy</div>
+      <div style="margin-bottom:0.5rem;">
+        <span class="author-chip"><span class="init">MT</span>Mathijs L. Tomassen <sup style="font-size:9px">#</sup></span>
+        <span class="author-chip"><span class="init">CP</span>Claudia E. Pronk <sup style="font-size:9px">#</sup></span>
+        <span class="author-chip"><span class="init">ED</span>Eric Deutsch</span>
+        <span class="author-chip"><span class="init">JV</span>Joost J.C. Verhoeff</span>
+        <span class="author-chip"><span class="init">BS</span>Ben J. Slotman</span>
+        <span class="author-chip"><span class="init">HL</span>Hanneke W.M. van Laarhoven</span>
+        <span class="author-chip"><span class="init">IB</span>Idris Bahce</span>
+        <span class="author-chip"><span class="init">AA</span>Abrahim Al-Mamgani</span>
+        <span class="author-chip"><span class="init">TG</span>Tanja D. de Gruijl</span>
+        <span class="author-chip"><span class="init">SS</span>Suresh Senan</span>
+        <span class="author-chip"><span class="init">FS</span>Famke L. Schneiders <sup style="font-size:9px">*</sup></span>
+        <span class="author-chip"><span class="init">PR</span>Peter S.N. van Rossum <sup style="font-size:9px">*</sup></span>
+      </div>
+      <p style="font-size:12px;color:var(--text-faint);margin-top:0.5rem;"><sup>#</sup> Shared first author &nbsp;·&nbsp; <sup>*</sup> Shared last author</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-icon">📬</span>Contact</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.75;margin-bottom:1.25rem;">
+        Questions about the meta-analysis, methodology, or collaboration? Click the button below to send us an email directly.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem;">
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.75;">
+          <strong style="color:var(--navy);">Mathijs L. Tomassen, MD</strong>
+          <span style="font-size:11px;color:var(--text-faint);margin-left:6px;font-family:var(--mono);">Corresponding author</span><br>
+          Department of Radiation Oncology, Amsterdam UMC
+        </div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.75;">
+          <strong style="color:var(--navy);">Peter S.N. van Rossum, MD, PhD</strong>
+          <span style="font-size:11px;color:var(--text-faint);margin-left:6px;font-family:var(--mono);">Corresponding author</span><br>
+          Department of Radiation Oncology, Amsterdam UMC, De Boelelaan 1117, 1081 HV Amsterdam, the Netherlands
+        </div>
+      </div>
+      <a href="mailto:m.l.tomassen@amsterdamumc.nl;p.s.n.vanrossum@amsterdamumc.nl?subject=Immunorad%20Living%20Meta-Analysis%20-%20Enquiry" style="display:inline-flex;align-items:center;gap:10px;padding:11px 22px;background:var(--navy);color:#fff;border-radius:7px;text-decoration:none;font-family:var(--sans);font-size:14px;font-weight:500;transition:background .15s;" onmouseover="this.style.background='var(--navy-mid)'" onmouseout="this.style.background='var(--navy)'">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 10 7 10-7"></path></svg>
+        Send us an email
+      </a>
+      <p style="font-size:12px;color:var(--text-faint);margin-top:1rem;line-height:1.7;">
+        This will open your default email client (e.g. Outlook) with both corresponding authors pre-filled as recipients.
+      </p>
+    </div>
+    <div class="disclaimer">
+      <strong>Disclaimer</strong><br>
+      This website presents results from a peer-reviewed living meta-analysis published in the European Journal of Cancer. Results are updated every six months as new trials become available; updated results have not yet undergone peer review and should be considered preliminary until published.<br><br>
+      The information is intended for scientific communication only. No rights can be derived from the data or results presented here.<br><br>
+      © Tomassen et al. All rights reserved. Content may not be reproduced without prior written permission from the authors.
+    </div>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──────────────────────────────────────────────────────────────
+const sectionOrder = ['overview','forest','subgroup','prisma','timeline','download','about','citations'];
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-links button').forEach((b,i) => b.classList.toggle('active', sectionOrder[i] === id));
+  document.querySelectorAll('.mobile-menu button').forEach((b,i) => b.classList.toggle('active', sectionOrder[i] === id));
+  window.scrollTo(0,0);
+}
+
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const btn  = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function closeMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+// ── FOREST PLOT (main) ───────────────────────────────────────────────────────
+let currentAnalysis = 'ici';
+
+function slugifyTumor(t) {
+  t = t.toLowerCase().trim();
+  t = t.replace('non-small-cell lung','nsclc');
+  t = t.replace('small-cell lung','sclc');
+  t = t.replace('head and neck','head_and_neck');
+  t = t.replace('cutaneous squamous-cell carcinoma','cutaneous_squamous_cell_carcinoma');
+  t = t.replace(/[^a-z0-9]+/g,'_');
+  t = t.replace(/^_+|_+$/g,'');
+  return t;
+}
+
+function setAnalysis(mode) {
+  currentAnalysis = mode;
+  document.querySelectorAll('.fp-tab').forEach((t,i) => t.classList.toggle('active',(i===0&&mode==='ici')||(i===1&&mode==='rt')));
+  document.getElementById('iciControls').style.display = mode==='ici' ? '' : 'none';
+  document.getElementById('rtControls').style.display  = mode==='rt'  ? '' : 'none';
+
+  const epSel = document.getElementById('sgEndpoint');
+  if (mode === 'rt') {
+    epSel.innerHTML = '<option value="PFS">Progression-Free Survival (PFS)</option>';
+  } else {
+    epSel.innerHTML = '<option value="OS">Overall Survival (OS)</option><option value="PFS">Progression-Free Survival (PFS)</option>';
+  }
+  document.getElementById('sgFactorsIO').style.display = mode==='io' ? '' : 'none';
+  document.getElementById('sgFactorsRT').style.display = mode==='rt' ? '' : 'none';
+  document.getElementById('sgImg').style.display = 'none';
+  document.getElementById('sgImg').src = '';
+  document.getElementById('sgPlaceholder').style.display = 'block';
+  document.getElementById('sgDownloadLink').style.display = 'none';
+  document.getElementById('sgFilename').textContent = '';
+  updateForestPlot();
+}
+
+function updateForestPlot() {
+  let pngSrc, pdfHref, label;
+  if (currentAnalysis === 'ici') {
+    const tumor    = document.getElementById('tumorSelect').value;
+    const endpoint = document.getElementById('endpointSelect').value;
+    if (tumor === 'all') {
+      pngSrc  = `figures/Forest_${endpoint}_by_tumor_type.png`;
+      pdfHref = `figures/Forest_${endpoint}_by_tumor_type.pdf`;
+      label   = `figures/Forest_${endpoint}_by_tumor_type.png`;
+    } else {
+      const slug = slugifyTumor(tumor);
+      pngSrc  = `figures/${endpoint}_${slug}.png`;
+      pdfHref = `figures/${endpoint}_${slug}.pdf`;
+      label   = `figures/${endpoint}_${slug}.png`;
+    }
+    document.getElementById('fpFilename').textContent = label;
+  } else {
+    const ep = document.getElementById('rtEndpointSelect').value;
+    pngSrc  = `figures/Forest_${ep}_by_tumor_type_RTvsNoRT.png`;
+    pdfHref = `figures/Forest_${ep}_by_tumor_type_RTvsNoRT.pdf`;
+    label   = `figures/Forest_${ep}_by_tumor_type_RTvsNoRT.png`;
+    document.getElementById('rtFpFilename').textContent = label;
+  }
+  const img = document.getElementById('forestImg');
+  const ph  = document.getElementById('fpPlaceholder');
+  img.style.display = 'block'; ph.style.display = 'none';
+  img.src = pngSrc;
+  img.onerror = () => showFpPlaceholder('fp');
+  document.getElementById('fpDownloadLink').href = pdfHref;
+}
+
+function showFpPlaceholder(which) {
+  if (which === 'fp') {
+    document.getElementById('forestImg').style.display = 'none';
+    document.getElementById('fpPlaceholder').style.display = 'block';
+  } else {
+    document.getElementById('sgImg').style.display = 'none';
+    document.getElementById('sgPlaceholder').style.display = 'block';
+  }
+}
+
+// ── SUBGROUP ANALYSES ────────────────────────────────────────────────────────
+let currentSgAnalysis = 'io';
+let currentSgFactor   = null;
+
+// Factor definitions — exactly matching column names in your R script
+const ioFactors = [
+  { col:'Timing',               label:'ICI timing',              cats:'Induction · Concurrent · Adjuvant' },
+  { col:'Tumortype_GBM',        label:'Tumor type (GBM)',        cats:'Glioblastoma · Non-glioblastoma' },
+  { col:'Chemo',                label:'Radiotherapy type',       cats:'Chemoradiotherapy · Radiotherapy' },
+  { col:'RT_Type3',             label:'RT modality',             cats:'SBRT · CRT · Conventional' },
+  { col:'antiPDL1only',         label:'Anti-PD-L1',              cats:'Yes · No' },
+  { col:'antiPD1only',          label:'Anti-PD-1',               cats:'Yes · No' },
+  { col:'antiCTLA4only',        label:'Anti-CTLA-4',             cats:'Yes · No' },
+  { col:'Design',               label:'Trial phase',             cats:'Phase II · Phase III' },
+  { col:'OpenBlind',            label:'Blinding',                cats:'Open · Blind' },
+  { col:'Surgery',              label:'Surgery',                 cats:'No · Pre RT · Post RT' },
+  { col:'ENI',                  label:'Elective nodal irrad.',   cats:'Yes · No' },
+  { col:'AgeUnder61',           label:'Age ≤60',                 cats:'Yes · No' },
+  { col:'MaleTreatment_ge70',   label:'Male ≥70%',               cats:'<70 · ≥70' },
+  { col:'n_over_299',           label:'Sample size >299',        cats:'Yes · No' },
+  { col:'FollowMore30',         label:'Follow-up ≥30 mo',        cats:'Yes · No' },
+  { col:'Abstract_only',        label:'Publication type',        cats:'Full · Abstract-only' },
+  { col:'Global_location_PFS',  label:'Geographic region',       cats:'Global · Western · Eastern' },
+  { col:'Publ_before_2025',     label:'Published before 2025',   cats:'Yes · No' },
+  { col:'WichFirstDichotomous', label:'First modality',          cats:'RT first · IO first' },
+  { col:'ImmunoradWithin30d',   label:'Start within 30 days',    cats:'Yes · No' },
+  { col:'Single_Multi',         label:'Center type',             cats:'Single · Multi' },
+  { col:'Premature_closure',    label:'Premature closure',       cats:'Yes · No' },
+];
+
+const rtFactors = [
+  { col:'antiPD1only',       label:'Anti-PD-1',            cats:'Yes · No' },
+  { col:'Tumortype_GBM',     label:'Tumor type (GBM)',     cats:'Glioblastoma · Non-glioblastoma' },
+  { col:'n_over_75',         label:'Sample size >75',      cats:'Yes · No' },
+  { col:'Publ_before_2022',  label:'Published before 2022',cats:'Yes · No' },
+];
+
+function buildFactorGrid(factors, gridId) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+  factors.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'sg-factor-btn';
+    btn.dataset.col = f.col;
+    btn.innerHTML = `${f.label}<span class="sg-cat">${f.cats}</span>`;
+    btn.addEventListener('click', () => selectSgFactor(f.col, btn));
+    grid.appendChild(btn);
+  });
+}
+
+function selectSgFactor(col, btn) {
+  // deactivate all buttons in current grid
+  const gridId = currentSgAnalysis === 'io' ? 'sgGridIO' : 'sgGridRT';
+  document.querySelectorAll(`#${gridId} .sg-factor-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSgFactor = col;
+  updateSubgroupPlot();
+}
+
+function setSgAnalysis(mode) {
+  currentSgAnalysis = mode;
+  currentSgFactor = null;
+  document.querySelectorAll('.fp-tabs button').forEach((b,i) => {
+    // only affect the subgroup tabs (second set)
+    if (b.closest('#subgroup')) b.classList.toggle('active',(i===0&&mode==='io')||(i===1&&mode==='rt'));
+  });
+  document.getElementById('sgFactorsIO').style.display = mode==='io' ? '' : 'none';
+  document.getElementById('sgFactorsRT').style.display = mode==='rt' ? '' : 'none';
+
+  // For RT analysis, PFS only — update endpoint selector
+  const epSel = document.getElementById('sgEndpoint');
+  if (mode === 'rt') {
+    epSel.innerHTML = '<option value="PFS">Progression-Free Survival (PFS)</option>';
+  } else {
+    epSel.innerHTML = '<option value="OS">Overall Survival (OS)</option><option value="PFS">Progression-Free Survival (PFS)</option>';
+  }
+
+  // reset image
+  document.getElementById('sgImg').style.display = 'none';
+  document.getElementById('sgImg').src = '';
+  document.getElementById('sgPlaceholder').style.display = 'block';
+  document.getElementById('sgDownloadLink').style.display = 'none';
+  document.getElementById('sgFilename').textContent = '';
+}
+
+function updateSubgroupPlot() {
+  if (!currentSgFactor) return;
+  const ep  = document.getElementById('sgEndpoint').value;
+  const png = `figures/Subgroup_${ep}_${currentSgFactor}.png`;
+  const pdf = `figures/Subgroup_${ep}_${currentSgFactor}.pdf`;
+
+  document.getElementById('sgFilename').textContent = png;
+
+  const img = document.getElementById('sgImg');
+  const ph  = document.getElementById('sgPlaceholder');
+  img.style.display = 'block'; ph.style.display = 'none';
+  img.src = png;
+  img.onerror = () => showFpPlaceholder('sg');
+
+  const dl = document.getElementById('sgDownloadLink');
+  dl.href = pdf;
+  dl.style.display = 'inline';
+}
+
+// Load available_tumors.json — disables tumor options with no data
+fetch('results/available_tumors.json')
+  .then(r => r.json())
+  .then(data => {
+    const avail = data.ANY || [];
+    Array.from(document.getElementById('tumorSelect').options).forEach(opt => {
+      if (opt.value !== 'all' && !avail.includes(opt.value)) {
+        opt.disabled = true;
+        opt.textContent += ' (no data)';
+      }
+    });
+  })
+  .catch(() => {});
+
+// Init
+buildFactorGrid(ioFactors, 'sgGridIO');
+buildFactorGrid(rtFactors,  'sgGridRT');
+updateForestPlot();
+</script>
+<!-- ══════════════ CITATIONS ══════════════ -->
+<div id="citations" class="section">
+  <div class="page">
+    <div class="section-hdr"><h2>Citations</h2><span class="sub">All 51 included randomized trials</span></div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-icon">💉</span>ICI trials — ICIs added to radiotherapy (42 trials)</div>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Glioblastoma</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;">
+        <li>Omuro A, et al. Radiotherapy combined with nivolumab or temozolomide for newly diagnosed glioblastoma with unmethylated MGMT promoter. <em>Neuro Oncol.</em> 2023;25(1):123–34. [CheckMate-498]</li>
+        <li>Brown NF, et al. Ipilimumab with temozolomide vs. temozolomide alone after surgery and chemoradiotherapy in recently diagnosed glioblastoma. <em>Neuro-Oncology Advances.</em> 2025;7(1). [Ipi-Glio]</li>
+        <li>Sim HW, et al. NUTMEG: A randomized phase II study of nivolumab and temozolomide versus temozolomide alone in newly diagnosed older patients with glioblastoma. <em>Neurooncol Adv.</em> 2023;5(1):vdad124.</li>
+        <li>Cabarrou B, et al. STERIMGLI: Hypo-fractionated stereotactic re-irradiation plus durvalumab vs re-irradiation alone for recurrent glioblastoma. <em>Neuro-Oncology.</em> 2025;27(Suppl_5):v99.</li>
+        <li>Lim M, et al. Phase III trial of chemoradiotherapy with temozolomide plus nivolumab or placebo for newly diagnosed glioblastoma with methylated MGMT promoter. <em>Neuro Oncol.</em> 2022;24(11):1935–49. [CheckMate-548]</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Head and neck cancer</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="6">
+        <li>Tao Y, et al. Long-term results of KEYNOTE-412: pembrolizumab plus CRT for locally advanced HNSCC. <em>J Clin Oncol.</em> 2025;43(16_suppl):6013.</li>
+        <li>Bourhis J, et al. Nivolumab added to cisplatin and radiotherapy versus cisplatin and radiotherapy alone after surgery for HNSCC (NIVOPOST-OP). <em>The Lancet.</em> 2025.</li>
+        <li>Uppaluri R, et al. Neoadjuvant and adjuvant pembrolizumab in locally advanced head and neck cancer (KEYNOTE-689). <em>N Engl J Med.</em> 2025;393(1):37–50.</li>
+        <li>Haddad R, et al. Atezolizumab in high-risk locally advanced squamous cell carcinoma of the head and neck (IMvoke010). <em>JAMA.</em> 2025;333(18):1599–607.</li>
+        <li>Lee NY, et al. Avelumab plus chemoradiotherapy versus chemoradiotherapy alone in locally advanced HNSCC (JAVELIN Head and Neck 100). <em>Lancet Oncol.</em> 2021;22(4):450–62.</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Nasopharyngeal cancer</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="11">
+        <li>Liang Y-L, et al. Adjuvant PD-1 blockade with camrelizumab for nasopharyngeal carcinoma (DIPPER). <em>JAMA.</em> 2025;333(18):1589–98.</li>
+        <li>Liu S-L, et al. Neoadjuvant and adjuvant toripalimab for locoregionally advanced nasopharyngeal carcinoma (B2019-014-01). <em>Lancet Oncol.</em> 2024;25(12):1563–75.</li>
+        <li>Liu X, et al. Induction-concurrent chemoradiotherapy with or without sintilimab in locoregionally advanced nasopharyngeal carcinoma (CONTINUUM). <em>The Lancet.</em> 2024;403(10445):2720–31.</li>
+        <li>You R, et al. Standard chemoradiotherapy with concurrent and adjuvant camrelizumab in high-risk nasopharyngeal carcinoma: multicentre, randomised, open-label, phase 3 trial. <em>BMJ.</em> 2026;390:e085863. [NCT04453826]</li>
+        <li>Chun SH, et al. Randomized phase II trial of consolidation pembrolizumab after definitive chemoradiotherapy in locally advanced nasopharyngeal carcinoma (KCSG HN19-09, CONPELAN). <em>Head Neck.</em> 2026. doi:10.1002/hed.70329</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">NSCLC</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="16">
+        <li>Zhou Q, et al. Sugemalimab versus placebo after chemoradiotherapy in stage III NSCLC (GEMSTONE-301). <em>Lancet Oncol.</em> 2022;23(2):209–19.</li>
+        <li>Spigel DR, et al. Five-year survival outcomes from PACIFIC: durvalumab after chemoradiotherapy in stage III NSCLC. <em>J Clin Oncol.</em> 2022;40(12):1301–11.</li>
+        <li>Pircher A, et al. KEYNOTE-867: stereotactic body radiotherapy with pembrolizumab for unresected stage I/II NSCLC. <em>Ann Oncol.</em> 2024.</li>
+        <li>Wu Y-L, et al. PACIFIC-5: consolidation durvalumab in unresectable stage III NSCLC after chemoradiotherapy. <em>J Hematol Oncol.</em> 2025;18(1):111.</li>
+        <li>Wang Y, et al. InTRist: induction toripalimab plus chemotherapy followed by concurrent CRT in bulky unresectable stage III NSCLC. <em>J Clin Oncol.</em> 2025;43(16_suppl):8012.</li>
+        <li>Chang JY, et al. Stereotactic ablative radiotherapy with or without immunotherapy for early-stage NSCLC (I-SABR). <em>Lancet.</em> 2023;402(10405):871–81.</li>
+        <li>Bradley JD, et al. Durvalumab with chemoradiotherapy for unresectable stage III NSCLC: final results from PACIFIC-2. <em>Ann Oncol.</em> 2024;9(suppl_3).</li>
+        <li>Simone CB, et al. SWOG/NRG S1914: randomized phase III trial of induction/consolidation atezolizumab plus SBRT versus SBRT alone in high-risk, early-stage NSCLC. <em>J Clin Oncol.</em> 2025;43(16_suppl):8003. [NCT04214262]</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">SCLC</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="24">
+        <li>Higgins KA, et al. Chemoradiation ± atezolizumab in limited-stage SCLC (NRG/Alliance LU005). <em>J Clin Oncol.</em> 2025:JCO-25-01569.</li>
+        <li>Cheng Y, et al. Durvalumab after chemoradiotherapy in limited-stage SCLC (ADRIATIC). <em>N Engl J Med.</em> 2024;391(14):1313–27.</li>
+        <li>Zhang P, et al. Toripalimab consolidation after concurrent CRT in limited-stage SCLC (2019-FXY-243). <em>J Clin Oncol.</em> 2024;42(16_suppl):8098.</li>
+        <li>Peters S, et al. Consolidation nivolumab and ipilimumab versus observation in limited-disease SCLC after chemoradiotherapy (STIMULI). <em>Ann Oncol.</em> 2022;33(1):67–79.</li>
+        <li>Gong Y, et al. AdvanTIG-204: ociperlimab plus tislelizumab and CRT in first-line limited-stage SCLC. <em>JTO Clin Res Rep.</em> 2025;6(11):100911.</li>
+        <li>Liu D, et al. Induction camrelizumab plus chemotherapy followed by chemoradiotherapy and consolidation camrelizumab in limited-stage SCLC: a randomized phase II trial. <em>J Thorac Oncol.</em> 2025 (abstract). [ChiCTR2000032275]</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Esophageal cancer</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="30">
+        <li>Kelly RJ, et al. Adjuvant nivolumab in resected esophageal or gastroesophageal junction cancer after neoadjuvant CRT (CheckMate-577). <em>J Clin Oncol.</em> 2025;43(16_suppl):4000.</li>
+        <li>Park S, et al. Durvalumab and tremelimumab with definitive chemoradiotherapy for locally advanced esophageal squamous cell carcinoma (ESR-14-10737). <em>Cancer.</em> 2022;128(11):2148–58.</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Rectal cancer</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="32">
+        <li>Wu F, et al. Short-course radiotherapy-based total neoadjuvant therapy plus tislelizumab for locally advanced rectal cancer (Neo-STAR): early outcomes of a randomized phase II trial. <em>Cancer Commun (Lond).</em> 2026. doi:10.34133/cancomm.0041</li>
+        <li>Xiao W, et al. Long-term survival of neoadjuvant chemoradiotherapy with or without PD-1 antibody sintilimab in pMMR locally advanced rectal cancer: a randomized clinical trial. <em>J Clin Oncol.</em> 2026;44(16_suppl):3610. [NCT04304209]</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Pancreatic cancer</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="34">
+        <li>Zhu X, et al. SBRT plus pembrolizumab and trametinib versus SBRT plus gemcitabine for locally recurrent pancreatic cancer. <em>Lancet Oncol.</em> 2022;23(3):e105–15.</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Cervical cancer</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="35">
+        <li>Lorusso D, et al. Pembrolizumab with chemoradiotherapy for high-risk locally advanced cervical cancer (KEYNOTE-A18). <em>Lancet.</em> 2024;403(10434):1341–50.</li>
+        <li>Monk BJ, et al. Durvalumab versus placebo with chemoradiotherapy for locally advanced cervical cancer (CALLA). <em>Lancet Oncol.</em> 2023;24(12):1334–48.</li>
+        <li>Chargari C, et al. Atezolizumab in combination with chemoradiation in locally advanced cervical cancer (ATEZOLACC). <em>Int J Gynecol Cancer.</em> 2025;35(2).</li>
+        <li>Oaknin A, et al. Maintenance dostarlimab after chemoradiation for high-risk locally advanced cervical cancer (GEICO 78-C/ATOMICC): randomized phase II trial. <em>ESMO Open.</em> 2026 (abstract). [NCT03833479]</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Prostate cancer</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="39">
+        <li>Fizazi K, et al. Final analysis of ipilimumab versus placebo following radiotherapy in postdocetaxel metastatic castration-resistant prostate cancer (CA184-043). <em>Eur Urol.</em> 2020;78(6):822–30.</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Sarcoma</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="40">
+        <li>Mowery YM, et al. Pembrolizumab, radiotherapy, and surgery versus radiotherapy and surgery for stage III soft tissue sarcoma (SU2C-SARC032). <em>Lancet.</em> 2024;404(10467):2053–64.</li>
+      </ol>
+
+      <p style="font-size:12px;font-weight:500;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem;">Cutaneous squamous-cell carcinoma</p>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;margin-bottom:1.25rem;" start="41">
+        <li>Rischin D, et al. Adjuvant cemiplimab or placebo in high-risk cutaneous squamous-cell carcinoma. <em>N Engl J Med.</em> 2025;393(8):774–85.</li>
+        <li>Koyfman SA, et al. KEYNOTE-630: adjuvant pembrolizumab versus placebo for high-risk locally advanced cutaneous SCC. <em>J Clin Oncol.</em> 2025;43(16_suppl):6000.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-icon">☢️</span>RT trials — Radiotherapy added to ICIs (9 trials)</div>
+      <ol style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-left:1.5rem;" start="43">
+        <li>Schoenfeld JD, et al. Durvalumab plus tremelimumab alone or in combination with low-dose or hypofractionated radiotherapy in metastatic NSCLC (NCI-2016-01325). <em>Lancet Oncol.</em> 2022;23(2):279–91.</li>
+        <li>Kothari G, et al. Nivolumab and stereotactic ablative body radiation therapy in advanced NSCLC (NIVORAD). <em>Int J Radiat Oncol Biol Phys.</em> 2025.</li>
+        <li>Theelen W, et al. Pembrolizumab with or without radiotherapy for metastatic NSCLC (PEMBRO-RT &amp; MDACC pooled analysis). <em>Lancet Respir Med.</em> 2021;9(5):467–75.</li>
+        <li>Owonikoko TK, et al. Tremelimumab and durvalumab with or without radiation for relapsed SCLC (NCI-2016-00026). <em>J Clin Oncol.</em> 37(15_suppl):8515.</li>
+        <li>Bozorgmehr F, et al. Consolidative thoracic radiotherapy with atezolizumab maintenance in extensive-stage SCLC: the phase 2 TREASURE randomized clinical trial (AIO-TRK-0320). <em>JAMA Oncol.</em> 2026. doi:10.1001/jamaoncol.2026.2330</li>
+        <li>Grønberg BH, et al. Concurrent thoracic radiotherapy, platinum/etoposide chemotherapy and durvalumab in extensive-stage SCLC: a phase III trial. <em>J Clin Oncol.</em> 2026;44(17_suppl):LBA8005. [NCT05223647]</li>
+        <li>Li W, et al. PD-1 inhibitors plus split-course radiotherapy in advanced kidney cancer. <em>J Oncol.</em> 2022;2022:8100323.</li>
+        <li>Lalani AA, et al. Cytoreductive stereotactic hypofractionated radiotherapy with ipilimumab/nivolumab for metastatic kidney cancer (CYTOSHRINK): randomized phase II trial. <em>J Clin Oncol.</em> 2026;44(7_suppl):416. [NCT04090710]</li>
+        <li>Spaas M, et al. Checkpoint inhibitors in combination with SBRT in patients with advanced solid tumors (CHEERS). <em>JAMA Oncol.</em> 2023;9(9):1205–13.</li>
+      </ol>
+    </div>
+
+  </div>
+</div>
+
+
+
+</body></html>
